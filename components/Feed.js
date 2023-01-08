@@ -1,44 +1,30 @@
 import { SparklesIcon } from '@heroicons/react/24/outline'
 import { useSession } from 'next-auth/react';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Input from './Input'
 import Post from './Post';
+import { collection, query, onSnapshot, orderBy } from "firebase/firestore";
+import { db } from '../firebase';
 
 function Feed() {
   const { data: session } = useSession();
+  const [posts, setPosts] = useState([]);
 
-  const posts = [
-    {
-      id: 1,
-      name: 'Kangqiang Yang',
-      username: 'yang8243',
-      userImg: 'https://th.bing.com/th/id/OIP.75QlW0c2G5fEK9flVvYknAHaLH?pid=ImgDet&rs=1',
-      img: 'https://th.bing.com/th/id/OIP.nI0YocbKuw2038jFv_VDfQHaD4?pid=ImgDet&rs=1',
-      text: 'nice view!',
-      timestamp: '2 hours ago',
+  useEffect(() => {
+    const getData = () => {
+      const q = query(collection(db, "twitter_posts"), orderBy("timestamp", "desc"));
 
-    },
-    {
-      id: 2,
-      name: 'Kangqiang Yang',
-      username: 'yang8243',
-      userImg: 'https://th.bing.com/th/id/OIP.75QlW0c2G5fEK9flVvYknAHaLH?pid=ImgDet&rs=1',
-      img: 'https://th.bing.com/th/id/OIP.nI0YocbKuw2038jFv_VDfQHaD4?pid=ImgDet&rs=1',
-      text: 'nice view!',
-      timestamp: '2 hours ago',
+      const unsub = onSnapshot(q, (doc) => {
+        setPosts(doc.docs);
+      });
 
-    },
-    {
-      id: 3,
-      name: 'Kangqiang Yang',
-      username: 'yang8243',
-      userImg: 'https://th.bing.com/th/id/OIP.75QlW0c2G5fEK9flVvYknAHaLH?pid=ImgDet&rs=1',
-      img: 'https://th.bing.com/th/id/OIP.nI0YocbKuw2038jFv_VDfQHaD4?pid=ImgDet&rs=1',
-      text: 'nice view!',
-      timestamp: '2 hours ago',
+      return () => unsub();
 
-    },
-  ];
+    }
+
+    getData();
+  }, []);
+
 
 
   return (
@@ -60,6 +46,7 @@ function Feed() {
         <Post
           key={post.id}
           post={post}
+          id={post.id}
         />
       ))}
 

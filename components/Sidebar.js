@@ -16,7 +16,6 @@ import { signIn, signOut, useSession } from "next-auth/react"
 
 function Sidebar() {
   const { data: session } = useSession();
-  console.log(session)
   return (
     <div className='hidden sm:flex flex-col fixed xl:items-start h-full xl:ml-20'>
       {/* Logo */}
@@ -64,7 +63,7 @@ function Sidebar() {
             alt="mini-profile"
             className="h-10 w-10 rounded-full xl:mr-2"
           />
-          <div className='hidden xl:inline leading-5'>
+          <div className='hidden xl:inline leading-5 pr-3'>
             <h4 className='font-bold'>{session.user?.name}</h4>
             <p className='text-gray-500 text-sm'>
               @{session.user.username}
