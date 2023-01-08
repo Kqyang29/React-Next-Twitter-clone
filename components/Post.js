@@ -4,10 +4,11 @@ import { collection, deleteDoc, doc, onSnapshot, setDoc } from 'firebase/firesto
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
 import TimeAgo from 'timeago-react';
-import { db } from '../firebase';
+import { db, storage } from '../firebase';
 
 import { HeartIcon as HeartIconFilled } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/router';
+import { deleteObject, ref } from 'firebase/storage';
 
 function Post({ post, id }) {
   const { data: session } = useSession();
@@ -42,6 +43,16 @@ function Post({ post, id }) {
       router.push('/login');
     }
 
+  };
+
+  const deletePost = async () => {
+    if (window.confirm('Are you sure you want to delete?')) {
+      await deleteDoc(doc(db, "twitter_posts", id));
+      if (post.data().image) {
+        await deleteObject(ref(storage, `twitter_posts/${id}/image`));
+      }
+      router.push('/');
+    }
   }
 
 
@@ -93,7 +104,12 @@ function Post({ post, id }) {
         <div className='flex items-center justify-between p-2'>
           <ChatBubbleLeftIcon className='w-10 h-10 hoverEffect p-2 hover:bg-sky-100 hover:text-blue-500' />
 
-          <TrashIcon className='w-10 h-10 hoverEffect p-2 hover:bg-sky-100 hover:text-blue-500' />
+          {session?.user?.uid === post?.data().id && (
+            <TrashIcon
+              onClick={deletePost}
+              className='w-10 h-10 hoverEffect p-2 hover:bg-sky-100 hover:text-blue-500' />
+          )}
+
 
           <div className='flex items-center'>
             {hasLike ? (
@@ -112,12 +128,6 @@ function Post({ post, id }) {
               </span>
             )}
           </div>
-
-          {/* <HeartIcon
-            onClick={likePost}
-            className='w-10 h-10 hoverEffect p-2 hover:bg-sky-100 hover:text-blue-500' /> */}
-
-
 
           <ShareIcon className='w-10 h-10 hoverEffect p-2 hover:bg-sky-100 hover:text-blue-500' />
 
