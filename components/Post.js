@@ -9,21 +9,35 @@ import { db, storage } from '../firebase';
 import { HeartIcon as HeartIconFilled } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/router';
 import { deleteObject, ref } from 'firebase/storage';
+import { useRecoilState } from 'recoil';
+import { modalState, postIdState } from '../atom/modalAtom';
 
 function Post({ post, id }) {
   const { data: session } = useSession();
   const [likes, setLikes] = useState([]);
+  const [comments, setComments] = useState([]);
   const [hasLike, setHasLike] = useState(false);
   const router = useRouter();
+  const [open, setOpen] = useRecoilState(modalState);
+  const [postId, setPostId] = useRecoilState(postIdState);
 
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, 'twitter_posts', id, 'like'),
+    const likeUnSub = onSnapshot(collection(db, 'twitter_posts', id, 'like'),
       (snapshot) => {
         setLikes(snapshot.docs);
       });
 
 
   }, [db]);
+
+  useEffect(() => {
+    const likeUnSub = onSnapshot(collection(db, 'twitter_posts', id, 'comments'),
+      (snapshot) => {
+        setComments(snapshot.docs);
+      });
+
+  }, [db]);
+
 
   useEffect(() => {
     setHasLike(likes.findIndex((like) => like.id === session?.user?.uid) !== -1);
@@ -87,12 +101,17 @@ function Post({ post, id }) {
         </div>
 
         {/* post text */}
-        <p className='text-lg my-2'>{post?.data()?.text}</p>
+        <p
+          onClick={() => router.push(`/posts/${id}`)}
+          className='text-lg my-2'>
+          {post?.data()?.text}
+        </p>
 
 
         {/* post img */}
         <div>
           <img
+            onClick={() => router.push(`/posts/${id}`)}
             src={post?.data()?.image}
             alt="post_img"
             className='rounded-lg'
@@ -102,7 +121,25 @@ function Post({ post, id }) {
 
         {/* icons */}
         <div className='flex items-center justify-between p-2'>
-          <ChatBubbleLeftIcon className='w-10 h-10 hoverEffect p-2 hover:bg-sky-100 hover:text-blue-500' />
+          <div className='flex items-center'>
+            <ChatBubbleLeftIcon
+              onClick={() => {
+                if (!session) {
+                  router.push('/login');
+                } else {
+                  setPostId(id);
+                  setOpen(!open);
+                }
+              }}
+              className='w-10 h-10 hoverEffect p-2 hover:bg-sky-100 hover:text-blue-500'
+            />
+
+            {comments.length > 0 && (
+              <span className={` text-sm select-none text-gray-500`}>
+                {comments.length}
+              </span>
+            )}
+          </div>
 
           {session?.user?.uid === post?.data().id && (
             <TrashIcon

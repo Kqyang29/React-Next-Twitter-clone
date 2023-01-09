@@ -5,6 +5,7 @@ import Input from './Input'
 import Post from './Post';
 import { collection, query, onSnapshot, orderBy } from "firebase/firestore";
 import { db } from '../firebase';
+import { AnimatePresence, motion } from 'framer-motion';
 
 function Feed() {
   const { data: session } = useSession();
@@ -31,7 +32,7 @@ function Feed() {
     <div className='xl:ml-[370px] border-l border-r border-gray-200 xl:min-w-[576px] sm:ml-[73px] flex-grow max-w-xl'>
 
       {/* Feed header */}
-      <div className="flex items-center py-2 px-3 sticky top-0 z-50 bg-white border-b border-gray-200">
+      <div className="flex items-center py-2 px-3 sticky top-0 z-20 bg-white border-b border-gray-200">
         <h2 className='flex-grow text-lg sm:text-xl font-bold cursor-pointer'>Home</h2>
         <div className="hoverEffect flex items-center justify-center w-9 h-9 px-0">
           <SparklesIcon className='h-5' />
@@ -42,13 +43,25 @@ function Feed() {
       {session && <Input />}
 
       {/* Feed Posts */}
-      {posts.map(post => (
-        <Post
-          key={post.id}
-          post={post}
-          id={post.id}
-        />
-      ))}
+      <AnimatePresence>
+        {posts.map(post => (
+          <motion.div
+            key={post.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+          >
+            <Post
+
+              post={post}
+              id={post.id}
+            />
+          </motion.div>
+
+        ))}
+      </AnimatePresence>
+
 
 
     </div>

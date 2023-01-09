@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Sidebar from '../components/Sidebar'
 import Feed from '../components/Feed'
 import Widgets from '../components/Widgets'
+import CommentModal from '../components/commentModal'
 
 export default function Home({ newResults, randomUsers }) {
 
@@ -30,6 +31,7 @@ export default function Home({ newResults, randomUsers }) {
 
 
         {/* Modal */}
+        <CommentModal />
 
       </main>
 
