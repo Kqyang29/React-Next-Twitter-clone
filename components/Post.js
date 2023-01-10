@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { deleteObject, ref } from 'firebase/storage';
 import { useRecoilState } from 'recoil';
 import { modalState, postIdState } from '../atom/modalAtom';
+import Image from 'next/image';
 
 function Post({ post, id }) {
   const { data: session } = useSession();
@@ -21,6 +22,7 @@ function Post({ post, id }) {
   const [open, setOpen] = useRecoilState(modalState);
   const [postId, setPostId] = useRecoilState(postIdState);
 
+  // const { userImg } = post?.data();
   useEffect(() => {
     const likeUnSub = onSnapshot(collection(db, 'twitter_posts', id, 'like'),
       (snapshot) => {
@@ -73,9 +75,13 @@ function Post({ post, id }) {
   return (
     <div className='flex overscroll-y-scroll border-b border-gray-200'>
       {/* left */}
-      <div className='my-4 mx-3'>
-        <img src={post?.data()?.userImg}
-          className='w-10 h-10 rounded-full cursor-pointer'
+      <div className='my-4 ml-3'>
+        <Image
+          src={post?.data()?.userImg}
+          loading="lazy"
+          width={40}
+          height={40}
+          className='rounded-full cursor-pointer'
         />
       </div>
 
@@ -89,7 +95,7 @@ function Post({ post, id }) {
             <span className='text-sm '>
               @{post?.data()?.username} -{" "}
               <TimeAgo
-                datetime={post?.data()?.timestamp.toDate()}
+                datetime={post?.data()?.timestamp?.toDate()}
               />
             </span>
           </div>
@@ -109,14 +115,17 @@ function Post({ post, id }) {
 
 
         {/* post img */}
-        <div>
-          <img
-            onClick={() => router.push(`/posts/${id}`)}
-            src={post?.data()?.image}
-            alt="post_img"
-            className='rounded-lg cursor-pointer'
-          />
-        </div>
+        {post?.data()?.image && (
+          <div>
+            <img
+              onClick={() => router.push(`/posts/${id}`)}
+              src={post?.data()?.image}
+              alt="post_img"
+              className='rounded-lg cursor-pointer'
+            />
+          </div>
+        )}
+
 
 
         {/* icons */}

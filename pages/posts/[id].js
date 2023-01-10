@@ -16,7 +16,7 @@ function Posts({ newResults, randomUsers }) {
 
   const { id } = router.query;
 
-  const [posts, setPosts] = useState([]);
+  const [post, setPost] = useState();
   const [comments, setComments] = useState([]);
 
 
@@ -24,7 +24,7 @@ function Posts({ newResults, randomUsers }) {
   useEffect(() => {
     const getPost = () => {
       const unsub = onSnapshot(doc(db, "twitter_posts", id), (doc) => {
-        setPosts(doc);
+        setPost(doc);
       });
 
       return () => unsub();
@@ -86,9 +86,8 @@ function Posts({ newResults, randomUsers }) {
               transition={{ duration: 1 }}
             >
               <Post
-
-                post={posts}
-                id={posts.id}
+                post={post}
+                id={id}
               />
             </motion.div>
 
