@@ -4,6 +4,15 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 First, run the development server:
 
+Features:
+  - user can signin and signout with google
+  - user can post tweet with images
+  - user can like the post
+  - user can leave the comment with the post
+  - user can delete the post
+  - user can delete the comment
+  - user can broswer the what's happening news
+
 ```bash
 npm run dev
 # or
