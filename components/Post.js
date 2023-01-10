@@ -33,7 +33,7 @@ function Post({ post, id }) {
   }, [db]);
 
   useEffect(() => {
-    const likeUnSub = onSnapshot(collection(db, 'twitter_posts', id, 'comments'),
+    const commentUnSub = onSnapshot(collection(db, 'twitter_posts', id, 'comments'),
       (snapshot) => {
         setComments(snapshot.docs);
       });
@@ -150,7 +150,7 @@ function Post({ post, id }) {
             )}
           </div>
 
-          {session?.user?.uid === post?.data().id && (
+          {session?.user?.uid === post?.data()?.id && (
             <TrashIcon
               onClick={deletePost}
               className='w-10 h-10 hoverEffect p-2 hover:bg-sky-100 hover:text-blue-500' />
