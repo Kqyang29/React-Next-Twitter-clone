@@ -74,7 +74,7 @@ function Post({ post, id }) {
     <div className='flex overscroll-y-scroll border-b border-gray-200'>
       {/* left */}
       <div className='my-4 mx-3'>
-        <img src={post.data()?.userImg}
+        <img src={post?.data()?.userImg}
           className='w-10 h-10 rounded-full cursor-pointer'
         />
       </div>
@@ -103,7 +103,7 @@ function Post({ post, id }) {
         {/* post text */}
         <p
           onClick={() => router.push(`/posts/${id}`)}
-          className='text-lg my-2'>
+          className='text-lg my-2 cursor-pointer'>
           {post?.data()?.text}
         </p>
 
@@ -114,7 +114,7 @@ function Post({ post, id }) {
             onClick={() => router.push(`/posts/${id}`)}
             src={post?.data()?.image}
             alt="post_img"
-            className='rounded-lg'
+            className='rounded-lg cursor-pointer'
           />
         </div>
 

@@ -7,5 +7,5 @@ export const modalState = atom({
 
 export const postIdState = atom({
   key: 'postIdState', // unique ID (with respect to other atoms/selectors)
-  default: "siTFwMRoubM3T7YiLA0M", // default value (aka initial value)
+  default: "id", // default value (aka initial value)
 });
